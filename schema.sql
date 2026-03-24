@@ -1,0 +1,16 @@
+
+DROP TABLE IF EXISTS tasks;
+
+CREATE TABLE tasks (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	title TEXT NOT NULL,
+	description TEXT,
+	due_date DATETIME,
+	image LONGBLOB,
+	user_name TEXT,
+	category TEXT,
+	is_completed INTEGER DEFAULT 0
+	
+);
+
