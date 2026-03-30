@@ -19,7 +19,10 @@ CREATE TABLE tasks (
 	image LONGBLOB,
 	user_name TEXT NOT NULL,
 	category TEXT,
+	priority INTEGER NOT NULL DEFAULT 0,
 	is_completed INTEGER DEFAULT 0,
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE INDEX idx_user_tasks ON tasks(user_id);
 

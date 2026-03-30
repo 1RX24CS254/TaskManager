@@ -1,62 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+<HTML lang='en'>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Task Manager</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../static/css/style.css">
+	<meta charset='UTF-8'>
+	<title>test</title>
 </head>
+
 <body>
+	
 
-    <div class="wrapper">
-        <header class="main-header">
-            <div class="logo-box">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-            </div>
-            <h1>Task Manager</h1>
-            <p>Sign in to manage your tasks</p>
-        </header>
+<div id="modalOverlay">
+  <div class="modal">
+	  <div id="textBox">
+		<div class="tbox">
+			<h1>TaskManager</h1>
+			Sign in to manage tasks..<br>
+		</div>
+	</div>
+    <h2>Enter your credentials to manage your account..</h2>
+    <form action="/login" method="POST">
+    <input type="text" name="username" placeholder="Username" required><br><br>
+    <input type="password" name="password" placeholder="Password" required><br><br>
+    <button type="submit" class="btn-login">Login</button>
+    <button onclick="closeModal()">Close</button>
+    </form>
+  </div>
+</div>
+<script>
+function openModal() {
+  document.getElementById("modalOverlay").style.display = "flex";
+}
 
-        <div class="login-card">
-            <div class="card-header">
-                <h2>Login</h2>
-                <p>Enter your credentials to access your account</p>
-            </div>
+function closeModal() {
+  document.getElementById("modalOverlay").style.display = "none";
+}
 
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}<div class="alert-error">{{ messages[0] }}</div>{% endif %}
-            {% endwith %}
-
-            <form action="/login" method="POST">
-                <div class="input-group">
-                    <label>Username</label>
-                    <div class="input-wrapper">
-                        <span class="icon">👤</span>
-                        <input type="text" name="username" placeholder="Enter your username" required>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>Password</label>
-                    <div class="input-wrapper">
-                        <span class="icon">🔒</span>
-                        <input type="password" name="password" placeholder="Enter your password" required>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-login">Login</button>
-            </form>
-            
-            <p class="demo-footer">Demo: Use any username and password to login</p>
-        </div>
-
-        <footer class="page-footer">
-            Task Manager Application • Flask + SQLite
-        </footer>
-    </div>
-
+// Optional: Close modal by clicking outside the box
+document.getElementById("modalOverlay").onclick = function(e) {
+  if (e.target === this) closeModal();
+};
+</script>
 </body>
-</html>
 
+</HTML>
 
