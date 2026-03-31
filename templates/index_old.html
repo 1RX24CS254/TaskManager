@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Task Manager</h1>
+            <nav>
+                <span>Welcome, <strong>{{ session['username'] }}</strong></span>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section class="add-task">
+            <h2>Create New Task</h2>
+            <form action="/add" method="POST">
+                <input type="text" name="title" placeholder="What needs to be done?" required>
+                <input type="text" name="category" placeholder="Category (e.g. School, Personal)">
+                <button type="submit" class="btn-primary">Add Task</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section class="task-list">
+            <h2>Your Tasks</h2>
+            
+            {% if tasks %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Task</th>
+                            <th>Category</th>
+                            <th>Created</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" {% if task.is_completed %}checked{% endif %}>
+                            </td>
+                            <td>{{ task.title }}</td>
+                            <td><span class="badge">{{ task.category }}</span></td>
+                            <td>{{ task.created_at[:10] }}</td> <td>
+                                <a href="/delete/{{ task.id }}" class="text-danger">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <p>You don't have any tasks yet. Start by adding one above!</p>
+                </div>
+            {% endif %}
+        </section>
+
+    </main>
+
+</body>
+</html>

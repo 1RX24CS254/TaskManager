@@ -12,19 +12,22 @@ CREATE TABLE users (
 CREATE TABLE tasks (
 	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 	user_id INTEGER NOT NULL,
+	parent_id INTEGER DEFAULT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	title TEXT NOT NULL,
 	description TEXT,
 	due_date DATETIME,
 	completed_date DATETIME,
-	progress_percent INTEGER,
+	progress_percent INTEGER DEFAULT 0,
 	image LONGBLOB,
 	user_name TEXT NOT NULL,
 	category TEXT,
-	priority INTEGER NOT NULL DEFAULT 0,
+	priority INTEGER DEFAULT 0,
 	is_completed INTEGER DEFAULT 0,
-	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (parent_id) REFERENCES tasks(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_user_tasks ON tasks(user_id);
+CREATE INDEX idx_subtasks ON tasks(parent_id);
 
