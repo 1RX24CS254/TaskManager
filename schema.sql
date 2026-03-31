@@ -16,6 +16,8 @@ CREATE TABLE tasks (
 	title TEXT NOT NULL,
 	description TEXT,
 	due_date DATETIME,
+	completed_date DATETIME,
+	progress_percent INTEGER,
 	image LONGBLOB,
 	user_name TEXT NOT NULL,
 	category TEXT,
