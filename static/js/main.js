@@ -1,3 +1,31 @@
+function filterTasks() {
+    let category = document.getElementById("filterCategory")?.value.toLowerCase() || "";
+    let priority = document.getElementById("filterPriority")?.value || "";
+
+    document.querySelectorAll("#taskTable tbody tr").forEach(row => {
+        let text = row.innerText.toLowerCase();
+
+        let show = true;
+
+        if (category && !text.includes(category)) show = false;
+        if (priority && !text.includes(priority)) show = false;
+
+        row.style.display = show ? "" : "none";
+    });
+}
+
+// ADD SUBTASK
+function addSubtask(parentId, btn) {
+    let input = btn.previousElementSibling;
+
+    fetch(`/add_subtask/${parentId}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({title: input.value})
+    }).then(() => location.reload());
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
 // ADD TASK
@@ -47,16 +75,6 @@ document.querySelectorAll(".toggle").forEach(box => {
 });
 
 
-// ADD SUBTASK
-function addSubtask(parentId, btn) {
-    let input = btn.previousElementSibling;
-
-    fetch(`/add_subtask/${parentId}`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({title: input.value})
-    }).then(() => location.reload());
-}
 
 
 // FILTER
@@ -65,20 +83,6 @@ document.querySelectorAll(".filters input, .filters select")
     el.addEventListener("input", filterTasks);
 });
 
-function filterTasks() {
-    let category = document.getElementById("filterCategory")?.value.toLowerCase() || "";
-    let priority = document.getElementById("filterPriority")?.value || "";
 
-    document.querySelectorAll("#taskTable tbody tr").forEach(row => {
-        let text = row.innerText.toLowerCase();
-
-        let show = true;
-
-        if (category && !text.includes(category)) show = false;
-        if (priority && !text.includes(priority)) show = false;
-
-        row.style.display = show ? "" : "none";
-    });
-}
 
 });
