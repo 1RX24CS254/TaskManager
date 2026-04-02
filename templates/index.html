@@ -77,12 +77,12 @@
     <td contenteditable="true" class="editable" data-field="title">
         {{ task.title }}
     </td>
-    <td><span class="badge">{{ task.category }}</span></td>
+    <td contenteditable="true" class="editable" data-field="category"><span class="badge">{{ task.category }}</span></td>
     <td>{{ task.created_at[:10] }}</td>
     <td>
         <span class="text-danger delete">Delete</span>
     </td>
-    <td>{{ task.description }}</td>
+    <td contenteditable="true" class="editable" data-field="description">{{ task.description }}</td>
 
     <td>
         <div class="progress-bar">
@@ -91,7 +91,7 @@
         {{ task.progress_percent }}%
     </td>
 
-    <td>{{ task.priority }}</td>
+    <td contenteditable="true" class="editable" data-field="priority">{{ task.priority }}</td>
     <td>{{ task.due_date }}</td>
     <td>{{ task.user_name }}</td>
 </tr>
@@ -103,8 +103,11 @@
         <!-- EXISTING SUBTASKS -->
         {% for sub in subtasks %}
             {% if sub.parent_id == task.id %}
-                <div class="subtask">
-                    ✔ {{ sub.title }} 
+                <div class="subtask" data-id="{{ sub.id }}">
+                    <input type="checkbox" class="toggle"
+                    {% if sub.is_completed %}checked{% endif %}>
+    
+                    {{ sub.title }} 
                     ({{ sub.category }} | Priority: {{ sub.priority }})
                 </div>
             {% endif %}

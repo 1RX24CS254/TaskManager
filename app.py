@@ -196,6 +196,13 @@ def toggle_task(id):
     # update parent progress
     if task['parent_id']:
         update_progress(task['parent_id'])
+    else:
+    # if main task toggled, mark all subtasks same status
+        conn.execute(
+            "UPDATE tasks SET is_completed = ? WHERE parent_id = ?",
+            (new_status, id)
+            )
+        update_progress(id)
 
     conn.commit()
     conn.close()
