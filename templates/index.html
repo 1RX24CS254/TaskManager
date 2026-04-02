@@ -7,9 +7,6 @@
 
 <link rel="stylesheet" href="../static/css/style.css">
 
-<!style>
-
-<!/style>
 </head>
 
 <body>
@@ -71,41 +68,61 @@
                 </tr>
             </thead>
             <tbody>
-                {% for task in tasks %}
-                <tr data-id="{{ task.id }}">
-                    <td>
-                        <input type="checkbox" class="toggle"
-                        {% if task.is_completed %}checked{% endif %}>
-                    </td>
-                    <td>{{ task.title }}</td>
-                    <td><span class="badge">{{ task.category }}</span></td>
-                    <td>{{ task.created_at[:10] }}</td>
-                    <td>
-                        <span class="text-danger delete">Delete</span>
-                    </td>
-		    <td>{{ task.description }}</td>
-		<td>
-    			<div class="progress-bar">
-        			<div class="progress" style="width: {{ task.progress_percent }}%"></div>
-    			</div>
-    			{{ task.progress_percent }}%
-		</td>
+{% for task in tasks %}
+<tr data-id="{{ task.id }}">
+    <td>
+        <input type="checkbox" class="toggle"
+        {% if task.is_completed %}checked{% endif %}>
+    </td>
+    <td contenteditable="true" class="editable" data-field="title">
+        {{ task.title }}
+    </td>
+    <td><span class="badge">{{ task.category }}</span></td>
+    <td>{{ task.created_at[:10] }}</td>
+    <td>
+        <span class="text-danger delete">Delete</span>
+    </td>
+    <td>{{ task.description }}</td>
 
-		<td>{{ task.priority }}</td>
-		<td>{{ task.due_date }}</td>
-		<td>{{ task.user_name }}</td>
-                </tr>
+    <td>
+        <div class="progress-bar">
+            <div class="progress" style="width: {{ task.progress_percent }}%"></div>
+        </div>
+        {{ task.progress_percent }}%
+    </td>
 
-		<tr>
-			<td colspan="6">
-    				<div class="subtasks" data-parent="{{ task.id }}">
-        				<input type="text" placeholder="Add subtask">
-        				<button onclick="addSubtask({{ task.id }}, this)">+</button>
-    				</div>
-			</td>
-		</tr>
-                {% endfor %}
-            </tbody>
+    <td>{{ task.priority }}</td>
+    <td>{{ task.due_date }}</td>
+    <td>{{ task.user_name }}</td>
+</tr>
+
+<!-- SUBTASK ROW -->
+<tr class="subtask-row">
+    <td colspan="10">
+
+        <!-- EXISTING SUBTASKS -->
+        {% for sub in subtasks %}
+            {% if sub.parent_id == task.id %}
+                <div class="subtask">
+                    ✔ {{ sub.title }} 
+                    ({{ sub.category }} | Priority: {{ sub.priority }})
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- ADD SUBTASK -->
+        <div class="subtasks" data-parent="{{ task.id }}">
+            <input type="text" class="sub-title" placeholder="Title">
+            <input type="text" class="sub-category" placeholder="Category">
+            <input type="number" class="sub-priority" placeholder="Priority">
+            <button onclick="addSubtask({{ task.id }}, this)">+</button>
+        </div>
+
+    </td>
+</tr>
+
+{% endfor %}
+</tbody>
         </table>
         {% else %}
         <div class="empty-state">
@@ -117,10 +134,6 @@
 </main>
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-<!script>
-<!/script>
-
 
 </body>
 </html>
