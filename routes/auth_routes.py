@@ -4,11 +4,11 @@ from werkzeug.security import check_password_hash
 
 auth_routes = Blueprint('auth_routes', __name__)
 
-@auth_routes.route('/', methods=['GET'])
-def index():
-    if 'user_id' in session:
-        return redirect(url_for('task_routes.dashboard'))
-    return jsonify({'message': 'Login required'})  # Or render_template('login.html')
+#@auth_routes.route('/', methods=['GET'])
+#def index():
+#    if 'user_id' in session:
+#        return redirect(url_for('task_routes.dashboard'))
+#    return jsonify({'message': 'Login required'})  # Or render_template('login.html')
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
@@ -31,6 +31,6 @@ def login():
 @auth_routes.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('auth_routes.index'))
+    return redirect(url_for('index'))
 
 

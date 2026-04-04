@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, jsonify
+from flask import render_template, Blueprint, request, session, jsonify
 from controllers.task_controller import (
     dashboard_controller,
     delete_task_controller
@@ -20,10 +20,11 @@ task_routes = Blueprint('task_routes', __name__)
 def dashboard():
     tasks, subtasks = dashboard_controller()
     # convert sqlite Row objects to dict
-    return jsonify({
-        "tasks": [dict(t) for t in tasks],
-        "subtasks": [dict(s) for s in subtasks]
-    })
+#    return jsonify({
+#        "tasks": [dict(t) for t in tasks],
+#        "subtasks": [dict(s) for s in subtasks]
+#    })
+    return render_template('index.html', tasks=tasks, subtasks=subtasks)
 
 # ---------------- ADD TASK ----------------
 @task_routes.route('/add', methods=['POST'])
