@@ -46,11 +46,21 @@ def delete_task_db(task_id):
     conn.close()
 
 
-def toggle_task_db(task_id, new_status):
+def toggle_task_db(task_id):
     conn = get_db_connection()
-    conn.execute("UPDATE tasks SET is_completed = ? WHERE id = ?", (new_status, task_id))
+    current = conn.execute(
+        "SELECT is_completed FROM tasks WHERE id = ?", (task_id,)
+    ).fetchone()
+
+    new_status = 0 if current['is_completed'] else 1
+
+    conn.execute(
+        "UPDATE tasks SET is_completed = ? WHERE id = ?",
+        (new_status, task_id)
+    )
     conn.commit()
     conn.close()
+    return new_status
 
 def edit_task_db(task_id, field, value):
     allowed_fields = ['title', 'description', 'category', 'priority', 'due_date']
