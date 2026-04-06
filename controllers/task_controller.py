@@ -22,10 +22,13 @@ def delete_task_controller(task_id):
     if session['role'] != 'admin' and task['user_id'] != session['user_id']:
         return {'error': 'Forbidden'}, 403
 
+    # 🔥 delete subtasks first
+    conn.execute("DELETE FROM tasks WHERE parent_id = ?", (task_id,))
+
+    # then delete main task
     conn.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+
     conn.commit()
     conn.close()
 
     return '', 204
-
-

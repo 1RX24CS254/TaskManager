@@ -7,6 +7,12 @@ secure_hash=generate_password_hash(master_password)
 stud_password="root@123"
 stud_hash=generate_password_hash(stud_password)
 
+prof_pass="1234"
+webmaster_pass="5678"
+
+prof_hash=generate_password_hash(prof_pass)
+webmaster_hash=generate_password_hash(webmaster_pass)
+
 connection = sqlite3.connect('database.db')
 
 with open('schema.sql') as f:
@@ -19,6 +25,13 @@ cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
 
 cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
             ('student_Summit', stud_hash, 'student'))
+
+cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+            ('professor', prof_hash, 'professor'))
+
+cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+            ('webmaster', prof_hash, 'webmaster'))
+
 
 student_id = cur.lastrowid
 

@@ -23,28 +23,35 @@
 
 <main class="container">
 
-    <!-- ADD TASK -->
-	<section class="card add-task">
-        	<h3>Create Task</h3>
-		<form id="taskForm">
-			<input type="text" id="title" placeholder="Task title" required>
-    			<input type="text" id="category" placeholder="Category">
-    			<input type="number" id="priority" placeholder="Priority (0-5)" min="0" max="5">
-    			<input type="date" id="due_date">
-    			<textarea id="description" placeholder="Description"></textarea>
-    			<button type="submit">Add Task</button>
-		</form>
-	</section>
-	<div class="filters">
-    		<select id="filterStatus">
-        		<option value="">All</option>
-        		<option value="0">Not Started</option>
-        		<option value="partial">Partial</option>
-        		<option value="1">Completed</option>
-    		</select>
-    		<input type="text" id="filterCategory" placeholder="Category">
-    		<input type="number" id="filterPriority" placeholder="Priority">
-	</div>
+    <div class="top-actions">
+    <button id="toggleTaskBtn" class="btn-primary">+ Add Task</button>
+    <button id="toggleFilterBtn" class="btn-secondary">🔍 Filters</button>
+</div>
+
+<!-- ADD TASK (HIDDEN) -->
+<section class="card add-task hidden" id="taskPanel">
+    <h3>Create Task</h3>
+    <form id="taskForm" class="compact-form">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="category" placeholder="Category">
+        <input type="number" id="priority" placeholder="P" min="0" max="5">
+        <input type="date" id="due_date">
+        <textarea id="description" placeholder="Description"></textarea>
+        <button type="submit">Add</button>
+    </form>
+</section>
+
+<!-- FILTERS (HIDDEN) -->
+<div class="filters hidden" id="filterPanel">
+    <select id="filterStatus">
+        <option value="">All</option>
+        <option value="0">Not Started</option>
+        <option value="partial">Partial</option>
+        <option value="1">Completed</option>
+    </select>
+    <input type="text" id="filterCategory" placeholder="Category">
+    <input type="number" id="filterPriority" placeholder="Priority">
+</div>
 
 
     <!-- TASK LIST -->
@@ -68,6 +75,12 @@
                 </tr>
             </thead>
             <tbody>
+<select class="dac-role">
+  <option value="student">Student</option>
+  <option value="professor">Professor</option>
+  <option value="webmaster">Webmaster</option>
+</select>
+<button onclick="grantAccess(taskId, this)">Grant</button>
 {% for task in tasks %}
 <tr data-id="{{ task.id }}">
     <td>
@@ -104,11 +117,9 @@
         {% for sub in subtasks %}
             {% if sub.parent_id == task.id %}
                 <div class="subtask" data-id="{{ sub.id }}">
-                    <input type="checkbox" class="toggle"
-                    {% if sub.is_completed %}checked{% endif %}>
-    
-                    {{ sub.title }} 
-                    ({{ sub.category }} | Priority: {{ sub.priority }})
+                    <input type="checkbox" class="toggle" {% if sub.is_completed %}checked{% endif %}>
+                    <span contenteditable="true" class="sub-edit" data-field="title">{{ sub.title }}</span>
+                    <span class="text-danger sub-delete">✕</span>
                 </div>
             {% endif %}
         {% endfor %}

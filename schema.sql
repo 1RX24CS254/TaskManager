@@ -31,3 +31,15 @@ CREATE TABLE tasks (
 CREATE INDEX idx_user_tasks ON tasks(user_id);
 CREATE INDEX idx_subtasks ON tasks(parent_id);
 
+CREATE TABLE task_access (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    task_id INTEGER NOT NULL,
+    role TEXT NOT NULL,
+    can_edit INTEGER DEFAULT 0,
+    can_delete INTEGER DEFAULT 0,
+    can_view INTEGER DEFAULT 1,
+    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_task_access_task ON task_access(task_id);
+CREATE INDEX idx_task_access_role ON task_access(role);
