@@ -15,20 +15,23 @@ def get_tasks(user_id, role):
         ).fetchall()
 
     else:
-        # RBAC: user sees:
-        # 1. their own tasks
-        # 2. tasks assigned to their role
+        # 1. Get Parent Tasks (Filtered by RBAC)
         tasks = conn.execute("""
-            SELECT * FROM tasks
-            WHERE parent_id IS NULL
-            AND (user_id = ? OR assigned_role = ?)
-            ORDER BY created_at DESC
+        SELECT * FROM tasks
+        WHERE parent_id IS NULL
+        AND (user_id = ? OR assigned_role = ?)
+        ORDER BY created_at DESC
         """, (user_id, role)).fetchall()
 
+        # 2. Get Subtasks (Filtered by "Is my parent visible?")
+        # We use a Subquery to find subtasks belonging to the tasks found above
         subtasks = conn.execute("""
-            SELECT * FROM tasks
-            WHERE parent_id IS NOT NULL
-            AND (user_id = ? OR assigned_role = ?)
+        SELECT * FROM tasks
+        WHERE parent_id IS NOT NULL
+        AND parent_id IN (
+            SELECT id FROM tasks 
+            WHERE user_id = ? OR assigned_role = ?
+        )
         """, (user_id, role)).fetchall()
 
     conn.close()
