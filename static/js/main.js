@@ -190,6 +190,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         el.addEventListener("change", filterTasks);
     });
+    
+    /*-----------RBAC----------------*/
+    window.assignRole = function(taskId, select) {
+    const role = select.value;
+
+    fetch('/assign_role', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ task_id: taskId, role: role })
+    })
+    .then(res => res.json())
+    .then(console.log);
+}
 
 });
 
@@ -202,3 +215,4 @@ function grantAccess(taskId, btn) {
         body: JSON.stringify({task_id: taskId, role: role, can_view:1, can_edit:1, can_delete:0})
     }).then(res => res.json()).then(console.log);
 }
+

@@ -66,8 +66,9 @@ def add_subtask(parent_id):
 # ---------------- DELETE TASK ----------------
 @task_routes.route('/delete/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
-    if not can_edit_task(task_id, session['role']):
+    if not can_edit_task(task_id, session['role'], session['user_id']):
         return {'error': 'Forbidden'}, 403
+
     return delete_task_controller(task_id)
 
 # ---------------- EDIT TASK ----------------
@@ -139,26 +140,23 @@ def edit_subtask(sub_id):
 
     return jsonify({'success': True})
 
-@task_routes.route('/grant_access', methods=['POST'])
-def grant_access():
+@task_routes.route('/assign_role', methods=['POST'])
+def assign_role():
+    if session['role'] != 'admin':
+        return {'error': 'Forbidden'}, 403
+
     data = request.get_json()
     task_id = data.get('task_id')
     role = data.get('role')
-    can_view = int(data.get('can_view', 1))
-    can_edit = int(data.get('can_edit', 0))
-    can_delete = int(data.get('can_delete', 0))
 
     conn = get_db_connection()
-    # Upsert: insert or update
-    conn.execute("""
-        INSERT INTO task_access (task_id, role, can_view, can_edit, can_delete)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(task_id, role) DO UPDATE SET
-            can_view=excluded.can_view,
-            can_edit=excluded.can_edit,
-            can_delete=excluded.can_delete
-    """, (task_id, role, can_view, can_edit, can_delete))
+    conn.execute(
+        "UPDATE tasks SET assigned_role = ? WHERE id = ?",
+        (role, task_id)
+    )
     conn.commit()
     conn.close()
+
     return jsonify({'success': True})
 
+    

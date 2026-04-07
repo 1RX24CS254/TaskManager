@@ -75,12 +75,7 @@
                 </tr>
             </thead>
             <tbody>
-<select class="dac-role">
-  <option value="student">Student</option>
-  <option value="professor">Professor</option>
-  <option value="webmaster">Webmaster</option>
-</select>
-<button onclick="grantAccess(taskId, this)">Grant</button>
+
 {% for task in tasks %}
 <tr data-id="{{ task.id }}">
     <td>
@@ -107,6 +102,17 @@
     <td contenteditable="true" class="editable" data-field="priority">{{ task.priority }}</td>
     <td>{{ task.due_date }}</td>
     <td>{{ task.user_name }}</td>
+    {% if session['role'] == 'admin' %}
+        <td>
+            <select onchange="assignRole({{ task.id }}, this)">
+                <option value="">None</option>
+                <option value="student">Student</option>
+                <option value="professor">Professor</option>
+                <option value="webmaster">Webmaster</option>
+            </select>
+        </td>
+    {% endif %}
+    <td>{{ task.assigned_role or "—" }}</td>
 </tr>
 
 <!-- SUBTASK ROW -->
